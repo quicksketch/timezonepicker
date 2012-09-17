@@ -58,29 +58,29 @@ generate the resulting imagemap.
 5. Export the data as text in a simplified format.
 
    ```
-psql -U postgres -d timezones -t -A -c "
+   psql -U postgres -d timezones -t -A -c "
 
-SELECT tzid, ST_AsText(ST_Simplify(ST_SnapToGrid(geom, 0.001), 0.3)) FROM timezones 
+   SELECT tzid, ST_AsText(ST_Simplify(ST_SnapToGrid(geom, 0.001), 0.3)) FROM timezones 
 
-WHERE (ST_Area(geom) > 3 OR (gid IN (
+   WHERE (ST_Area(geom) > 3 OR (gid IN (
 
-SELECT MAX(gid) FROM timezones WHERE ST_Area(geom) <= 3 AND tzid NOT IN (
+   SELECT MAX(gid) FROM timezones WHERE ST_Area(geom) <= 3 AND tzid NOT IN (
 
-SELECT tzid FROM timezones WHERE ST_Area(geom) > 3
+   SELECT tzid FROM timezones WHERE ST_Area(geom) > 3
 
-) group by tzid ORDER BY MAX(ST_AREA(geom))
+   ) group by tzid ORDER BY MAX(ST_AREA(geom))
 
-))) AND tzid != 'uninhabited';
+   ))) AND tzid != 'uninhabited';
 
-   " > tz_world.txt
-```
+      " > tz_world.txt
+   ```
 
    And a special export for Islands that are hard to select otherwise.
 
    ```
    psql -U postgres -d timezones -t -A -c "
-SELECT tzid, ST_Extent(ST_AsText(ST_SnapToGrid(ST_Expand(geom, 3), 0.001))) FROM timezones
+   SELECT tzid, ST_Extent(ST_AsText(ST_SnapToGrid(ST_Expand(geom, 3), 0.001))) FROM timezones
 
-WHERE ST_Area(geom) <= 2 AND (tzid LIKE 'Pacific/%' OR tzid LIKE 'Indian/%' OR tzid LIKE 'Atlantic/%') group by tzid;
-   " > tz_islands.txt
-```
+   WHERE ST_Area(geom) <= 2 AND (tzid LIKE 'Pacific/%' OR tzid LIKE 'Indian/%' OR tzid LIKE 'Atlantic/%') group by tzid;
+      " > tz_islands.txt
+   ```
