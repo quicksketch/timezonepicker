@@ -22,6 +22,8 @@ if (isset($_GET['w']) && (int) $_GET['w'] < 1280) {
 
 list($map_width, $map_height) = getimagesize($image_file);
 
+ini_set('error_reporting', E_ALL & ~E_NOTICE);
+date_default_timezone_set('UTC');
 $contents = file_get_contents('tz_world.txt');
 $rows = explode("\n", $contents);
 $area_polys = array();
@@ -67,7 +69,7 @@ foreach ($rows as $row) {
     // Most of our polygons will only have an outer polygon, though its possible
     // that we need to cutout an inner polygon. Since ImageMaps don't support
     // this, we discard the cutout.
-    list($outer_poly, $cutout_poly) = explode('),(', $poly);
+    list($outer_poly) = explode('),(', $poly);
 
     $area_poly = array();
     $longlats = explode(',', $outer_poly);
