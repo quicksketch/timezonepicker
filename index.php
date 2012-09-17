@@ -14,7 +14,7 @@ $bases = array(
 );
 $image_file = isset($_GET['src']) && isset($options[$_GET['src']]) ? $_GET['src'] : 'images/gray-600.png';
 
-if (isset($_GET['w']) && (int) $_GET['w'] < 1280) {
+if (!empty($_GET['w']) && is_numeric($_GET['w']) && (int) $_GET['w'] < 1280) {
   $image_file = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/';
   $image_file .= 'images/custom.php?w=' . (int) $_GET['w'];
   $image_file .= '&base=' . (isset($_GET['base']) && array_key_exists($_GET['base'], $bases) ? $_GET['base'] : reset($bases));
@@ -91,6 +91,11 @@ if (file_exists('tz_islands.txt')) {
   foreach ($rows as $row) {
     list($timezone_name, $timezone_data) = explode('|', $row);
 
+    // Don't allow wrapping across the seam of the map.
+    if ($timezone_name === 'Pacific/Fiji' || $timezone_name === 'Pacific/Auckland') {
+      continue;
+    }
+
     // Remove BOX() from the data.
     $timezone_data = substr($timezone_data, 4);
     $timezone_data = substr($timezone_data, 0, strlen($timezone_data) - 1);
@@ -103,15 +108,14 @@ if (file_exists('tz_islands.txt')) {
     list($longitude, $latitude) = explode(' ', $longlats[1]);
     list($x2, $y2) = timezone_picker_convert_xy($latitude, $longitude, $map_width, $map_height);
 
-    // Don't allow wrapping across the seam of the map.
-    if ($x2 < 0) {
-      $x2 = $map_width;
+    // Ensure minimum areas.
+    if ($x2 - $x1 < 10) {
+      $x1 -= 5;
+      $x2 += 5;
     }
-    if ($x1 < 0) {
-      $x1 = $map_width + $x1;
-    }
-    if ($x1 > $x2) {
-      $x1 = 0;
+    if ($y1 - $y2 < 10) {
+      $y2 -= 5;
+      $y1 += 5;
     }
 
     $area_poly = array($x1, $y1, $x2, $y2);

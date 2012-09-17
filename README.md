@@ -44,7 +44,7 @@ generate the resulting imagemap.
 4. Create a temporary database and import the SQL file.
 
    ```
-   psql -U postgres -c "CREATE DATABASE timezones" -d template1```
+   psql -U postgres -c "CREATE DATABASE timezones" -d template1
    ```
 
    And import the PostGIS functions into the database.
@@ -79,8 +79,8 @@ generate the resulting imagemap.
 
    ```
    psql -U postgres -d timezones -t -A -c "
-      SELECT tzid, ST_Extent(ST_AsText(ST_SnapToGrid(ST_Expand(geom, 3), 0.001))) FROM timezones
+      SELECT tzid, ST_Expand(ST_Extent(geom), GREATEST(3 - ST_Area(ST_Extent(geom)), 0)) FROM timezones
 
-      WHERE ST_Area(geom) <= 2 AND (tzid LIKE 'Pacific/%' OR tzid LIKE 'Indian/%' OR tzid LIKE 'Atlantic/%') group by tzid;
+      WHERE ST_Area(geom) < 3 AND (tzid LIKE 'Pacific/%' OR tzid LIKE 'Indian/%' OR tzid LIKE 'Atlantic/%') GROUP BY tzid ORDER BY tzid;
    " > tz_islands.txt
    ```
