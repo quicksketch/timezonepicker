@@ -36,21 +36,28 @@ generate the resulting imagemap.
 
 3. Convert the tz_world.shp file into SQL:
 
+```
    cd world
    shp2pgsql tz_world.shp timezones > tz_world.sql
+```
 
 4. Create a temporary database and import the SQL file.
 
-   psql -U postgres -c "CREATE DATABASE timezones" -d template1
+```
+psql -U postgres -c "CREATE DATABASE timezones" -d template1```
+```
 
    And import the PostGIS functions into the database.
+```
    psql -U postgres -d timezones -f /usr/local/pgsql-9.1/share/contrib/postgis-2.0/postgis.sql
 
    psql -U postgres -d timezones < tz_world.sql
+```
 
 5. Export the data as text in a simplified format.
 
-   psql -U postgres -d timezones -t -A -c "
+```
+psql -U postgres -d timezones -t -A -c "
 
 SELECT tzid, ST_AsText(ST_Simplify(ST_SnapToGrid(geom, 0.001), 0.3)) FROM timezones 
 
@@ -65,11 +72,14 @@ SELECT tzid FROM timezones WHERE ST_Area(geom) > 3
 ))) AND tzid != 'uninhabited';
 
    " > tz_world.txt
+```
 
    And a special export for Islands that are hard to select otherwise.
 
+```
    psql -U postgres -d timezones -t -A -c "
 SELECT tzid, ST_Extent(ST_AsText(ST_SnapToGrid(ST_Expand(geom, 3), 0.001))) FROM timezones
 
 WHERE ST_Area(geom) <= 2 AND (tzid LIKE 'Pacific/%' OR tzid LIKE 'Indian/%' OR tzid LIKE 'Atlantic/%') group by tzid;
    " > tz_islands.txt
+```
