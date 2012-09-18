@@ -22,7 +22,8 @@ methods.init = function(initOpts) {
 
     // Wrap the img tag in a relatively positioned DIV for the pin.
     $(imgElement).wrap('<div class="timezone-picker"></div>').parent().css({
-      position: 'relative'
+      position: 'relative',
+      width: $(imgElement).width() + 'px'
     });
 
     // Add the pin.
@@ -208,6 +209,11 @@ methods.resize = function() {
       };
     }
     var rescale = imgElement.width/imgElement.getAttribute('width');
+
+    // Adjust the image size.
+    $(imgElement).parent().css({
+      width: $(imgElement).width() + 'px'
+    });
 
     // Adjust the coords attribute.
     var originalCoords = areaElement.originalCoords.coords.split(',');
