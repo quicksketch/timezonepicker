@@ -4,6 +4,7 @@ $bases = array(
   'gray' => 'png',
   'blue-marble' => 'jpg',
   'living' => 'jpg',
+  'night-electric' => 'jpg',
 );
 $width = isset($_GET['w']) ? min((int) $_GET['w'], 1280) : 600;
 $height = round($width / 2);
