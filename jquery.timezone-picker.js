@@ -99,6 +99,9 @@ methods.init = function(initOpts) {
   });
 };
 
+/**
+ * Update the currnetly selected timezone and update the pin location.
+ */
 methods.updateTimezone = function(newTimezone) {
   selectedTimzone = newTimezone;
   $pin.css('display', 'none');
@@ -112,7 +115,87 @@ methods.updateTimezone = function(newTimezone) {
   return this;
 };
 
-// Bind resize event to scale the image map.
+/**
+ * Update the currnetly selected timezone and update the pin location.
+ */
+methods.detectLocation = function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  }
+
+  function showPosition(position) {
+    var $imgElement = $(imgElement);
+    var imageXY = convertXY(position.coords.latitude, position.coords.longitude, $imgElement.width(), $imgElement.height());
+
+    $(mapElement).find('area').each(function(m, areaElement) {
+      var coords = areaElement.getAttribute('coords').split(',');
+      var shape = areaElement.getAttribute('shape');
+      var poly = [];
+      for (var n = 0; n < coords.length/2; n++) {
+        poly[n] = [ coords[n * 2], coords[n * 2 + 1] ];
+      }
+
+      if ((shape === 'poly' && isPointInPoly(poly, imageXY[0], imageXY[1])) ||
+          (shape === 'rect' && isPointInRect(coords, imageXY[0], imageXY[1]))
+        ) {
+        $(areaElement).triggerHandler('click');
+        return false;
+      }
+    });
+  }
+
+  // Converts lat and long into X,Y coodinates on a Equirectangular map.
+  function convertXY(latitude, longitude, map_width, map_height) {
+    var x = Math.round((longitude + 180) * (map_width / 360));
+    var y = Math.round(((latitude * -1) + 90) * (map_height / 180));
+    return [x, y];
+  }
+
+  // Do a dual-check here to ensure accuracy. Ray-tracing algorithm gives us the
+  // basic idea of if we're in a polygon, but may be inaccurate if the ray goes
+  // through a single point exactly at its vertex. We double check positives
+  // against a bounding box, ensuring the item is actually in that area.
+  function isPointInPoly(poly, x, y){
+    var inside = false;
+    var bbox = [1000000,1000000,-1000000,-1000000];
+    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      var xi = poly[i][0], yi = poly[i][1];
+      var xj = poly[j][0], yj = poly[j][1];
+      bbox[0] = Math.min(bbox[0], xi);
+      bbox[1] = Math.min(bbox[1], yi);
+      bbox[2] = Math.max(bbox[2], xi);
+      bbox[3] = Math.max(bbox[3], yi);
+
+      var intersect = ((yi > y) != (yj > y))
+          && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+    }
+
+    return inside && isPointInRect(bbox, x, y);
+  }
+
+  // Simple check if a point is in between two X/Y coordinates. Input may be
+  // any two points, with a box made between them.
+  function isPointInRect(rect, x, y) {
+    // Adjust so we're always going top-left to lower-right.
+    rect = [
+      Math.min(rect[0], rect[2]),
+      Math.min(rect[1], rect[3]),
+      Math.max(rect[0], rect[2]),
+      Math.max(rect[1], rect[3])
+    ];
+    return (x >= rect[0] && x <= rect[2] && y >= rect[1] && y <= rect[2]);
+  }
+
+  return this;
+};
+
+/**
+ * Experimental method to rewrite the imagemap based on new image dimensions.
+ *
+ * This does not resize the image itself, it recalculates the imagemap to match
+ * the current dimensions of the image.
+ */
 methods.resize = function() {
   $(mapElement).find('area').each(function(m, areaElement) {
     // Save the original coordinates for further resizing.
