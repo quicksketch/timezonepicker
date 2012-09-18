@@ -185,7 +185,7 @@ function timezone_picker_convert_xy($latitude, $longitude, $map_width, $map_heig
   <input type="submit" value="Generate" />
 </form>
 
-<div id="timezone-picker" style="width: 300px; height: 200px; overflow: auto;">
+<div id="timezone-picker">
   <img id="timezone-image" src="<?php print $image_file; ?>" width="<?php print $map_width; ?>" height="<?php print $map_height; ?>" usemap="#timezone-map" />
   <img class="timezone-pin" src="images/pin.png" style="padding-top: 4px;" />
   <map name="timezone-map" id="timezone-map">
