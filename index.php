@@ -10,13 +10,16 @@ $bases = array(
   'blue-marble' => 'Blue marble',
   'living' => 'Living Earth',
 );
-$image_file = isset($_GET['src']) && isset($options[$_GET['src']]) ? $_GET['src'] : 'images/gray-600.png';
 
 if (!empty($_GET['w']) && is_numeric($_GET['w']) && (int) $_GET['w'] < 1280) {
   $local_file = 'images/custom.php?w=' . (int) $_GET['w'];
   $local_file .= '&base=' . (isset($_GET['base']) && array_key_exists($_GET['base'], $bases) ? $_GET['base'] : reset($bases));
-  $remote_file = 'http://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['REQUEST_URI']), '/') . '/' . $local_file;
 }
+else {
+  $local_file = isset($_GET['src']) && isset($options[$_GET['src']]) ? $_GET['src'] : 'images/gray-600.png';
+}
+
+$remote_file = 'http://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['REQUEST_URI']), '/') . '/' . $local_file;
 
 // Dimensions must always be exact since the imagemap does not scale.
 list($map_width, $map_height) = getimagesize($remote_file);
@@ -96,6 +99,4 @@ $timezones = timezone_picker_parse_files($map_width, $map_height, 'tz_world.txt'
 <div style="text-align: center; margin-top: 40px;">©2012 Timezone Picker by <a href="http://quicksketch.org">Nathan Haug</a> | <a href="https://github.com/quicksketch/timezonepicker">Fork on Github</a></div>
 
 </body>
-
 </html>
-
