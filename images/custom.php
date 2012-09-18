@@ -56,6 +56,7 @@ elseif ($extension == 'gif') {
 imagecopyresampled($res, $im, 0, 0, 0, 0, $width, $height, $original_width, $original_height);
 
 header('Content-Type: image/' . $extension);
+header('Cache-Control: public, max-age: 3600');
 
 $close_function = 'image' . $open_extension;
 $close_function($res);
