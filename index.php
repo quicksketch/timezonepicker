@@ -38,8 +38,8 @@ $timezones = timezone_picker_parse_files($map_width, $map_height, 'tz_world.txt'
 
   <!-- All these JavaScript files are necessary for implementation -->
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-  <script type="text/javascript" src="jquery.maphilight.min.js"></script>
-  <script type="text/javascript" src="jquery.timezone-picker.js"></script>
+  <script type="text/javascript" src="/lib/jquery.maphilight.min.js"></script>
+  <script type="text/javascript" src="/lib/jquery.timezone-picker.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       // Set up the picker to update target timezone and country select lists.
