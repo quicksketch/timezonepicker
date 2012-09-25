@@ -9,15 +9,111 @@ http://timezonepicker.com.
 Features
 --------
 
-- Simple implementation, lightweight footprint (180KB).
+- Simple implementation, lightweight footprint (160KB, 40KB gzipped).
 - Includes 440+ clickable areas.
+- HTML5 Geolocation to identify timezone.
 - Islands include padding to increase ease of selection.
+- Country mapping can be used to set timezone and country at the same time.
+- Timezone highlighting on rollover (thanks to [jQuery maphilight](http://davidlynch.org/projects/maphilight/docs/))
+
+Usage
+-----
+
+Basic call using all defaults:
+```javascript
+$('#img-with-usemap-attr').timezonePicker();
+```
+
+A few simple options:
+```javascript
+$('#img-with-usemap-attr').timezonePicker({
+  pin: '.timezone-pin',
+  fillColor: 'FFCCCC',
+});
+```
+
+Options
+-------
+As pulled from the set of defaults.
+
+```javascript
+$.fn.timezonePicker.defaults = {
+  // Selector for the pin that should be used. This selector only works in the
+  // immediate parent of the image map img tag.
+  pin: '.timezone-pin',
+  // Specify a URL for the pin image instead of using a DOM element.
+  pinUrl: null,
+  // Preselect a particular timezone.
+  timezone: null,
+  // Pass through options to the jQuery maphilight plugin.
+  maphilight: true,
+  // Selector for the select list, textfield, or hidden to update upon click.
+  target: null,
+  // Selector for the select list, textfield, or hidden to update upon click
+  // with the specified country.
+  countryTarget: null,
+  // If changing the country should use the first timezone within that country.
+  countryGuess: true,
+  // A list of country guess exceptions. These should only be needed if a
+  // country spans multiple timezones.
+  countryGuesses: {
+    'AU': 'Australia/Sydney',
+    'BR': 'America/Sao_Paulo',
+    'CA': 'America/Toronto',
+    'CN': 'China/Shanghai',
+    'ES': 'Europe/Madrid',
+    'MX': 'America/Mexico_City',
+    'RU': 'Russia/Moscow',
+    'US': 'America/New_York'
+  },
+  // If this map should automatically adjust its size if scaled. Note that
+  // this can be very expensive computationally and will likely have a delay
+  // on resize. The maphilight library also is incompatible with this setting
+  // and will be disabled.
+  responsive: false,
+
+  // Default options passed along to the maphilight plugin.
+  fade: false,
+  stroke: true,
+  strokeColor: 'FFFFFF',
+  strokeOpacity: 0.4,
+  fillColor: 'FFFFFF',
+  fillOpacity: 0.4,
+  groupBy: 'data-offset'
+};
+```
+
+Additional methods
+------------------
+After creating a timezone picker from an image tag, you can execute additional
+commands on the image map with these methods:
+
+```javascript
+// Query the user's browser for the current location and set timezone from that.
+$('#img-with-usemap-attr').timezonePicker('detectTimezone');
+
+// The detectTimezone method may also provide event callbacks.
+$('#img-with-usemap-attr').timezonePicker('detectTimezone', {
+  success: successCallback,
+  error: errorCallback,
+  complete: completeCallback, // Called on both success or failure.
+});
+
+// Set the active timezone to some value programatically.
+$('#img-with-usemap-attr').timezonePicker('updateTimezone', 'America/New_York');
+
+// Resize the image map coordinates to match an adjusted size of the image.
+// Note that this option does not work well and is very slow. Not recommended.
+$('#img-with-usemap-attr').timezonePicker('resize');
+```
 
 Building new definition files
 -----------------------------
 
 The definition files are used to determine the polygons and rectangles used to
-generate the resulting imagemap.
+generate the resulting imagemap. Note this should rarely be necessary for normal
+users as the timezone picker project will rebuild the shape files after updates
+to the timezone database.
 
 1. Download latest shape file "tz_world" from
    http://efele.net/maps/tz/world/.
