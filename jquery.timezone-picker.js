@@ -119,9 +119,9 @@ methods.updateTimezone = function(newTimezone) {
 /**
  * Update the currnetly selected timezone and update the pin location.
  */
-methods.detectLocation = function() {
+methods.detectLocation = function(detectOpts) {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
+    navigator.geolocation.getCurrentPosition(showPosition, handleErrors);
   }
 
   function showPosition(position) {
@@ -139,10 +139,22 @@ methods.detectLocation = function() {
       if ((shape === 'poly' && isPointInPoly(poly, imageXY[0], imageXY[1])) ||
           (shape === 'rect' && isPointInRect(coords, imageXY[0], imageXY[1]))
         ) {
-        $(areaElement).triggerHandler('click');
+        $(areaElement).triggerHandler('click', detectOpts['success']);
         return false;
       }
     });
+    if (detectOpts['complete']) {
+      detectOpts['complete'](position);
+    }
+  }
+
+  function handleErrors(error) {
+    if (detectOpts['error']) {
+      detectOpts['error'](error);
+    }
+    if (detectOpts['complete']) {
+      detectOpts['complete'](error);
+    }
   }
 
   // Converts lat and long into X,Y coodinates on a Equirectangular map.
