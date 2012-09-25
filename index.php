@@ -81,10 +81,10 @@ $timezones = timezone_picker_parse_files($map_width, $map_height, 'tz_world.txt'
   <map name="timezone-map" id="timezone-map">
 <?php foreach ($timezones as $timezone_name => $timezone): ?>
 <?php foreach ($timezone['polys'] as $coords): ?>
-    <area data-timezone="<?php print $timezone_name; ?>" data-country="<?php print $timezone['country']; ?>" data-pin="<?php print implode(',', $timezone['pin']); ?>" data-offset="<?php print $timezone['offset']; ?>" href="#" shape="poly" coords="<?php print implode(',', $coords); ?>" />
+    <area data-timezone="<?php print $timezone_name; ?>" data-country="<?php print $timezone['country']; ?>" data-pin="<?php print implode(',', $timezone['pin']); ?>" data-offset="<?php print $timezone['offset']; ?>" shape="poly" coords="<?php print implode(',', $coords); ?>" />
 <?php endforeach; ?>
 <?php foreach ($timezone['rects'] as $coords): ?>
-    <area data-timezone="<?php print $timezone_name; ?>" data-country="<?php print $timezone['country']; ?>" data-pin="<?php print implode(',', $timezone['pin']); ?>" data-offset="<?php print $timezone['offset']; ?>" href="#" shape="rect" coords="<?php print implode(',', $coords); ?>" />
+    <area data-timezone="<?php print $timezone_name; ?>" data-country="<?php print $timezone['country']; ?>" data-pin="<?php print implode(',', $timezone['pin']); ?>" data-offset="<?php print $timezone['offset']; ?>" shape="rect" coords="<?php print implode(',', $coords); ?>" />
 <?php endforeach; ?>
 <?php endforeach; ?>
   </map>
