@@ -17,14 +17,16 @@ function timezone_picker_parse_files($map_width, $map_height, $tz_world, $tz_isl
   // See http://us.php.net/manual/en/timezones.php.
   $timezones = array();
 
-  // By using the UNIX Epoch, daylight savings will not be active (since it's in
-  // the winter). This makes timezone offsets consistent year-round. i.e. Arizona
-  // is always -4 UTC instead of -5 UTC in the summer. It also helps increase
-  // consistency in the vertical display of timezones, since any kind of
-  // daylight savings is hit or miss between different countries. As an added
-  // bonus, it distinguishes Pacific/Marjuro and Pacific/Kwaljalein which have
-  // overlapping borders but separate timezones.
-  $empty_date = date_create('1970-01-01T00:00:00Z');
+  // By using a winter date, daylight savings will not be active. This makes
+  // timezone offsets consistent year-round. i.e. Arizona is always -4 UTC
+  // instead of -5 UTC in the summer. It also helps increase consistency in the
+  // vertical display of timezones, since any kind of daylight savings is hit or
+  // miss between different countries. As an added bonus, it distinguishes
+  // Pacific/Marjuro and Pacific/Kwaljalein which have overlapping borders but
+  // separate timezones.
+  // Also note that the TZ Database has different offsets for countries based on
+  // year, so using the current year refects current offsets.
+  $empty_date = date_create('2012-01-01T00:00:00Z');
 
   // Parse the main timezone export file.
   $contents = file_get_contents($tz_world);
