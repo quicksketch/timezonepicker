@@ -180,3 +180,11 @@ to the timezone database.
       WHERE ST_Area(geom) < 3 AND (tzid LIKE 'Pacific/%' OR tzid LIKE 'Indian/%' OR tzid LIKE 'Atlantic/%') GROUP BY tzid ORDER BY tzid;
    " > tz_islands.txt
    ```
+
+LICENSE
+---------
+
+Copyright 2011-2013 Nathan Haug
+
+Released under the MIT License.
+
