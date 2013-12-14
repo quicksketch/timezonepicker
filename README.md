@@ -71,7 +71,10 @@ $.fn.timezonePicker.defaults = {
   // on resize. The maphilight library also is incompatible with this setting
   // and will be disabled.
   responsive: false,
-
+  // A function to be called upon timezone change
+  // timezoneName, countryName, and offset will be passed as arguments
+  changeHandler: null,
+  
   // Default options passed along to the maphilight plugin.
   fade: false,
   stroke: true,
