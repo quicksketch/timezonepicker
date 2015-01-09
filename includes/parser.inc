@@ -84,7 +84,7 @@ function timezone_picker_parse_files($map_width, $map_height, $tz_world, $tz_isl
 
   // Optionally make islands easier to select by using bounding boxes.
   if (file_exists($tz_islands)) {
-    $contents = file_get_contents('tz_islands.txt');
+    $contents = file_get_contents($tz_islands);
     $rows = array_filter(explode("\n", $contents));
 
     foreach ($rows as $row) {
