@@ -60,10 +60,10 @@ $.fn.timezonePicker.defaults = {
     'AU': 'Australia/Sydney',
     'BR': 'America/Sao_Paulo',
     'CA': 'America/Toronto',
-    'CN': 'China/Shanghai',
+    'CN': 'Asia/Shanghai',
     'ES': 'Europe/Madrid',
     'MX': 'America/Mexico_City',
-    'RU': 'Russia/Moscow',
+    'RU': 'Europe/Moscow',
     'US': 'America/New_York'
   },
   // If this map should automatically adjust its size if scaled. Note that
